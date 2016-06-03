@@ -18,4 +18,4 @@ COPY Gemfile.lock /usr/app/
 RUN bundle install
 
 COPY . /app
-CMD ["bundle", "exec", "ruby", "/usr/src/app/gitlab-automerge-on-webhook.rb"]
+CMD ["bundle", "exec", "ruby", "/usr/src/app/github-automerge-on-webhook.rb"]
