@@ -4,11 +4,7 @@ MAINTAINER Francis Robichaud <frobichaud@petalmd.com>
 ENV BUILD_PACKAGES bash curl-dev ruby-dev build-base
 ENV RUBY_PACKAGES ruby ruby-io-console ruby-bundler
 
-RUN apk update && \
-    apk upgrade && \
-    apk add $BUILD_PACKAGES && \
-    apk add $RUBY_PACKAGES && \
-    rm -rf /var/cache/apk/*
+RUN apk add --update --no-cache $BUILD_PACKAGES $RUBY_PACKAGES
 
 RUN mkdir /app
 WORKDIR /app
