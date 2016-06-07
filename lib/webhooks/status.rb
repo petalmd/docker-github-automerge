@@ -1,8 +1,8 @@
 module Webhooks
   class Status
 
-    attr_reader :payload
-    
+    attr_reader :payload, :repository
+
     def initialize(filename)
       file = File.new filename
       @payload = JSON.parse file.read
@@ -11,7 +11,6 @@ module Webhooks
     end
 
     def parse
-      @repository = @payload['repository']
       @repository = @payload['repository']
     end
   end
