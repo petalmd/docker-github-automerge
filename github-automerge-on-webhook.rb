@@ -1,18 +1,18 @@
-# Parses a Merge Request webhook from GitLab and updates the actual Merge Request
-# with merge_when_build_succeeds: true and should_remove_source_branch: true
+# Parses a commit status webhook from GitHub and updates Pull Requests to auto-merge
 require 'json'
 require 'faraday'
 
 if ARGV.count != 3
   puts "---------------"
-  puts "run with <executable> $GITLAB_HOST $GITLAB_TOKEN json"
+  puts "run with <executable> $GITHUB_HOST $GITHUB_USER $GITHUB_OAUTH_TOKEN json"
   puts "---------------"
   exit -1
 end
 
 endpoint = Faraday.new "https://#{ARGV[0]}/api/v3/"
 puts endpoint
-endpoint.headers['PRIVATE-TOKEN'] = ARGV[1]
+endpoint.headers['Accept'] = "application/vnd.github.v3+json"
+ARGV[1]
 
 webhook = JSON.parse ARGV[2]
 puts "Received webhook with #{webhook.count} events"

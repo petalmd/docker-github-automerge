@@ -1,8 +1,7 @@
-FROM alpine:edge
+FROM ruby:alpine
 MAINTAINER Francis Robichaud <frobichaud@petalmd.com>
 
-ENV BUILD_PACKAGES bash curl-dev ruby-dev build-base
-ENV RUBY_PACKAGES ruby ruby-io-console ruby-bundler
+ENV RUBY_PACKAGES ruby-bundler
 
 RUN apk update && \
     apk upgrade && \
@@ -10,6 +9,7 @@ RUN apk update && \
     apk add $RUBY_PACKAGES && \
     rm -rf /var/cache/apk/*
 
+USER petal
 RUN mkdir /app
 WORKDIR /app
 
