@@ -15,14 +15,20 @@ describe Webhooks::Status do
     it 'should parse the associated repo' do
       status = Webhooks::Status.new stub_file
       repo_name = status.repository['full_name']
-      provider = Client::Provider.new repo_name, 'xxxx', 'xxxx'
-      pull_requests = JSON.parse Client::PullRequest.new(provider).list.body
-      statuses = Client::Status.new(provider)
+      provider = Client::Provider.new repo_name, 'xxx', 'xxx'
+      pr_api = Client::PullRequest.new provider
+      status_api = Client::Status.new provider
+
+      pull_requests = pr_api.list
+
       pull_requests.each do |pr|
+        pr = pr_api.get(pr['number'])
         head = pr['head']
-        branch_status = JSON.parse statuses.get(head['sha']).body
-        if branch_status['state'] == 'success'
-          pr.merge
+        branch_status = status_api.get head['sha']
+        if pr['mergeable'] && branch_status['state'] == 'success'
+          puts pr_api.merge pr['number'], head['sha']
+          # TODO: report in slack
+          # TODO: delete branch head['pr']
         else
           puts 'not ready to merge'
         end
