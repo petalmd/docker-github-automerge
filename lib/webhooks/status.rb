@@ -1,9 +1,17 @@
 module Webhooks
   class Status
-    
-    def initialize(payload)
-      @payload = JSON.parse payload
+
+    attr_reader :payload, :repository
+
+    def initialize(filename)
+      file = File.new filename
+      @payload = JSON.parse file.read
+      raise ArgumentError, 'File content is expected to be a json' unless @payload.is_a? Hash
+      parse
     end
 
+    def parse
+      @repository = @payload['repository']
+    end
   end
 end
