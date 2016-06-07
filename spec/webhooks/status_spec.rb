@@ -3,15 +3,15 @@ require 'webhooks/status'
 
 describe Webhooks::Status do
 
-  let!(:payload) {
-    File.new('spec/fixtures/status_webhook.txt').readlines
+  let(:stub_file) {
+    'spec/fixtures/status_webhook.txt'
   }
 
   context 'when we receive a status webhook' do
 
     it 'should parse the associated repo' do
-      s = Webhooks::Status.new '{}'
-      puts payload
+      status = Webhooks::Status.new stub_file
+      expect(status.payload.name).to eq ''
       # Webhooks::Status.new '{asdf}'
     end
   end
