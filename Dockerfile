@@ -3,11 +3,7 @@ MAINTAINER Francis Robichaud <frobichaud@petalmd.com>
 
 ENV RUBY_PACKAGES ruby-bundler
 
-RUN apk update && \
-    apk upgrade && \
-    apk add $BUILD_PACKAGES && \
-    apk add $RUBY_PACKAGES && \
-    rm -rf /var/cache/apk/*
+RUN apk add --update --no-cache $BUILD_PACKAGES $RUBY_PACKAGES
 
 USER petal
 RUN mkdir /app
