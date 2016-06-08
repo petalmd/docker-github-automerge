@@ -7,14 +7,13 @@ describe Client::Provider do
     let(:token) {'1234567890'}
     let(:host) {'http://google.com'}
 
-    it 'instantiate the provder properly' do
+    it 'instantiate the provider properly' do
       expect(Client::Provider.new repo_name, user, token, host).not_to be_nil
     end
 
     it 'configure the base_url properly' do
       provider = Client::Provider.new repo_name, user, token, host
       expect(provider.base_url).to eq "/repos/#{repo_name}"
-      expect(provider.connection.host).to eq 'google.com'
     end
 
     context 'when making requests' do
