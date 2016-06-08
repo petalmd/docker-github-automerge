@@ -3,14 +3,13 @@ module Webhooks
 
     attr_reader :payload, :repository
 
-    def initialize(filename)
-      file = File.new filename
-      @payload = JSON.parse file.read
-      raise ArgumentError, 'File content is expected to be a json' unless @payload.is_a? Hash
-      parse
+    def initialize(json)
+      raise ArgumentError, 'File content is expected to be a json' unless json.is_a? Hash
+      parse json
     end
 
-    def parse
+    def parse(json)
+      @payload = json
       @repository = @payload['repository']
     end
   end

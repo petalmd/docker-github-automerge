@@ -9,16 +9,12 @@ module Client
       @provider.get "/pulls?status=#{status}"
     end
 
-    def get(pull_number)
-      @provider.get "/pulls/#{pull_number}"
+    def get(pr_number)
+      @provider.get "/pulls/#{pr_number}"
     end
 
-    def latest_commit(pull_number)
-
-    end
-
-    def merge(pull_number)
-      @provider.put "/pulls/#{pull_number}/merge"
+    def merge(pr_number, sha)
+      @provider.put "/pulls/#{pr_number}/merge", {sha: sha}
     end
 
   end
