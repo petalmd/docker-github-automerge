@@ -3,7 +3,10 @@ require 'faraday'
 module Client
   class Provider
 
-    def initialize(repo_name, user, token, host = 'https://api.github.com/')
+    attr_reader :base_url, :repo_name
+    attr_writer :connection
+
+    def initialize(repo_name, user, token, host)
       @connection = Faraday.new(host) do |faraday|
         faraday.request  :url_encoded
         faraday.headers['Accept'] = 'application/vnd.github.v3+json'
