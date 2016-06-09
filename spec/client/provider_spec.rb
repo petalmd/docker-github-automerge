@@ -30,7 +30,7 @@ describe Client::Provider do
         stubs.get("#{provider.base_url}/random") { |env| [ 200, {}, '{"result":"random"}' ]}
 
         provider.connection = faraday
-        expect(provider.get '/random').to eq('result' => 'random')
+        expect(provider.get('/random').body).to eq("{\"result\":\"random\"}")
       end
 
       it 'should prepend base_url when making put call' do
@@ -38,7 +38,7 @@ describe Client::Provider do
         stubs.put("#{provider.base_url}/random") { |env| [ 200, {}, '{"result":"random"}' ]}
 
         provider.connection = faraday
-        expect(provider.put '/random').to eq('result' => 'random')
+        expect(provider.put('/random').body).to eq("{\"result\":\"random\"}")
       end
 
     end

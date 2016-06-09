@@ -3,6 +3,9 @@ require 'faraday'
 module Client
   class Provider
 
+    class UnauthorizedError < StandardError; end
+    class NotFoundError < StandardError; end
+
     attr_reader :base_url, :repo_name
     attr_writer :connection
 
@@ -21,12 +24,20 @@ module Client
 
     def get(endpoint)
       req = @connection.get "#{@base_url}#{endpoint}"
-      JSON.parse req.body
+      verify_response req
+      req
     end
 
     def put(endpoint, payload = {})
       req = @connection.put "#{@base_url}#{endpoint}", payload.to_json
-      JSON.parse req.body
+      verify_response req
+      req
+    end
+
+    private
+    def verify_response(req)
+      raise UnauthorizedError, req.body if req.status == 401
+      raise NotFoundError, req.body if req.status == 404
     end
 
   end
