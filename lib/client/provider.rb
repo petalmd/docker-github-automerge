@@ -25,13 +25,13 @@ module Client
     def get(endpoint)
       req = @connection.get "#{@base_url}#{endpoint}"
       verify_response req
-      JSON.parse req.body
+      req
     end
 
     def put(endpoint, payload = {})
       req = @connection.put "#{@base_url}#{endpoint}", payload.to_json
       verify_response req
-      JSON.parse req.body
+      req
     end
 
     private

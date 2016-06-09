@@ -6,7 +6,8 @@ module Client
     end
 
     def get(sha)
-      @provider.get "/commits/#{sha}/status"
+      req = @provider.get "/commits/#{sha}/status"
+      JSON.parse(req.body)
     end
 
   end
