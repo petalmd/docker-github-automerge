@@ -55,11 +55,11 @@ class AutoMerge
 
     case status
       when 200, 201
-        text = "Merged\n#{merge_msg}"
+        text = 'Sucessfull merge'
         color = 'good'
 
       when 409
-        text = 'There are merge conflicts'
+        text = 'Merge conflicts'
         color = 'warning'
       else
         text = 'Couldnt merge branch - see on GitHub'
