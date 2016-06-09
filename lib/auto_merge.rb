@@ -50,12 +50,34 @@ class AutoMerge
 
     merge_msg = {
         fallback: "#{from} to #{to}. #{@status.repository['full_name']}",
-        text: "*Branch:* #{from}* \n    merged into *#{to}*\n *Repo*:#{@status.repository['full_name']}\n*Url:*#{url}\n#{body['message']}"
+        text: body['message'],
+        fields: [
+            {
+              title: 'Branch',
+              value: from,
+              short: true
+            },
+            {
+                title: 'Target Branch',
+                value: to,
+                short: true
+            },
+            {
+                title: 'Repository',
+                value: @status.repository['full_name'],
+                short: true
+            },
+            {
+                title: 'URL',
+                value: url,
+                short: true
+            }
+        ]
     }
 
     case status
       when 200, 201
-        text = 'Sucessfull merge'
+        text = 'Successful merge'
         color = 'good'
 
       when 409
