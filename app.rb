@@ -8,9 +8,20 @@ Dir.glob("#{File.dirname(__FILE__)}/lib/*.rb") { |lib|
   require File.basename(lib, '.*')
 }
 
-set :port, 8080
+set :port, ENV['port'] || 8080
+set :user, ENV['user']
+set :token, ENV['token']
+set :host, ENV['host'] || 'https://api.github.com'
+
+
+raise ArgumentError, 'Missing user and token environment variables' unless settings.user && settings.token && settings.host
 
 post '/webhooks' do
-  AutoMerge.new({}, 'user', 'token')
-  'asdf'
+  body = request.body.read
+  json = JSON.parse body
+
+  auto = AutoMerge.new json, settings.user, settings.token, settings.host
+  puts auto.list
+
+  'success'
 end
