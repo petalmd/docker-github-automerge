@@ -50,7 +50,7 @@ class AutoMerge
 
     merge_msg = {
         fallback: "#{from} to #{to}. #{@status.repository['full_name']}",
-        text: "#{from} to #{to}\n #{@status.repository['full_name']}\n #{url}\n#{body}"
+        text: "*Branch:* #{from}* \n    merged into *#{to}*\n *Repo*:#{@status.repository['full_name']}\n*Url:*#{url}\n#{body.message}"
     }
 
     case status
