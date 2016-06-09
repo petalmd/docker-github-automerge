@@ -50,16 +50,16 @@ class AutoMerge
 
     merge_msg = {
         fallback: "#{from} to #{to}. #{@status.repository['full_name']}",
-        text: "#{from} to #{to}\n #{@status.repository['full_name']}\n #{url}\n#{body}"
+        text: "*Branch:* #{from}* \n    merged into *#{to}*\n *Repo*:#{@status.repository['full_name']}\n*Url:*#{url}\n#{body.message}"
     }
 
     case status
       when 200, 201
-        text = "Merged\n#{merge_msg}"
+        text = 'Sucessfull merge'
         color = 'good'
 
       when 409
-        text = 'There are merge conflicts'
+        text = 'Merge conflicts'
         color = 'warning'
       else
         text = 'Couldnt merge branch - see on GitHub'
