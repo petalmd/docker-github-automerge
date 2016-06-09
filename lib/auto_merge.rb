@@ -40,7 +40,7 @@ class AutoMerge
         url = pull_request['html_url']
         merge pull_request['number'], sha, from, to, url
       else
-        @logger.info "Skipping PR ##{pull_request['number']} - not ready to merge" if @logger
+        @logger.info "Skipping PR ##{pull_request['number']} in #{@status.repository['full_name']} - not ready to merge" if @logger
       end
     end
   end
@@ -50,7 +50,7 @@ class AutoMerge
 
     merge_msg = {
         fallback: "#{from} to #{to}. #{@status.repository['full_name']}",
-        text: "*Branch:* #{from}* \n    merged into *#{to}*\n *Repo*:#{@status.repository['full_name']}\n*Url:*#{url}\n#{body.message}"
+        text: "*Branch:* #{from}* \n    merged into *#{to}*\n *Repo*:#{@status.repository['full_name']}\n*Url:*#{url}\n#{body['message']}"
     }
 
     case status
