@@ -3,6 +3,8 @@ require 'sinatra/base'
 require 'sinatra/reloader'
 require 'bundler/setup'
 
+require 'slack-notifier'
+
 $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/lib")
 Dir.glob("#{File.dirname(__FILE__)}/lib/*.rb") { |lib|
   require File.basename(lib, '.*')
@@ -18,11 +20,19 @@ raise ArgumentError, 'Missing user and token environment variables' unless setti
 
 post '/webhooks' do
   body = request.body.read
-  json = JSON.parse body
+  begin
+    json = JSON.parse body
 
-  auto = AutoMerge.new json, settings.user, settings.token, settings.host
-  auto.logger = logger
-  auto.perform
+    auto = AutoMerge.new json, settings.user, settings.token, settings.host
+    auto.logger = logger
+    auto.perform
 
-  'success'
+    'success'
+  rescue Exception => e
+    if ENV['SLACK_WEBHOOK_URL']
+      notifier = Slack::Notifier.new(ENV['SLACK_WEBHOOK_URL'])
+      notifier.ping 'AutoMerge server had an error while receiving webhook'
+    end
+    raise e
+  end
 end
