@@ -47,7 +47,7 @@ class AutoMerge
 
   def merge(number, sha, from, to, url)
     status, body = @pr_api.merge number, sha
-
+puts body.message
     merge_msg = {
         fallback: "#{from} to #{to}. #{@status.repository['full_name']}",
         text: "*Branch:* #{from}* \n    merged into *#{to}*\n *Repo*:#{@status.repository['full_name']}\n*Url:*#{url}\n#{body['message']}"
