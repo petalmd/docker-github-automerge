@@ -50,11 +50,11 @@ class AutoMerge
 
     merge_msg = {
         fallback: "#{from} to #{to}. #{@status.repository['full_name']}",
-        text: "#{from} to #{to}\n #{@pr_api.repo_name}\n #{url}\n#{body}"
+        text: "#{from} to #{to}\n #{@status.repository['full_name']}\n #{url}\n#{body}"
     }
 
     case status
-      when 201
+      when 200, 201
         text = "Merged\n#{merge_msg}"
         color = 'good'
 
