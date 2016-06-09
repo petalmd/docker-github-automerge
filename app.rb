@@ -31,12 +31,7 @@ post '/webhooks' do
   rescue Exception => e
     if ENV['SLACK_WEBHOOK_URL']
       notifier = Slack::Notifier.new(ENV['SLACK_WEBHOOK_URL'])
-      error = {
-          fallback: 'AutoMerge server had an error while receiving webhook',
-          text: 'AutoMerge server had an error while receiving webhook',
-          color: 'danger'
-      }
-      notifier.ping 'AutoMerge', attachments: [error]
+      notifier.ping 'AutoMerge server had an error while receiving webhook'
     end
     raise e
   end

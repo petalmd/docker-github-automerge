@@ -49,7 +49,7 @@ class AutoMerge
     status, body = @pr_api.merge number, sha
 
     merge_msg = {
-        fallback: "#{from} to #{to}. #{@status.repository['full_name']}",
+        fallback: "#{from} to #{to}. #{@pr_api.repo_name}",
         text: "#{from} to #{to}\n #{@pr_api.repo_name}\n #{url}\n#{body}"
     }
 
