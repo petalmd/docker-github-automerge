@@ -31,9 +31,8 @@ class AutoMerge
     pull_requests = @pr_api.list.collect {|pr| @pr_api.get pr['number']}
     pull_requests.select do |pull_request|
       sha = pull_request['head']['sha']
-      branch_status = @status_api.get sha
 
-      can_merge = pull_request['mergeable'] && branch_status['state'] == 'success'
+      can_merge = pull_request['mergeable'] && pull_request['mergeable_state'] == 'clean'
       if can_merge
         from = pull_request['head']['label']
         to = pull_request['base']['label']
