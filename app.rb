@@ -14,7 +14,7 @@ set :port, ENV['PORT'] || 8080
 set :user, ENV['USER']
 set :token, ENV['TOKEN']
 set :host, ENV['HOST'] || 'https://api.github.com'
-
+set :bind, '0.0.0.0'
 
 raise ArgumentError, 'Missing user and token environment variables' unless settings.user && settings.token && settings.host
 
