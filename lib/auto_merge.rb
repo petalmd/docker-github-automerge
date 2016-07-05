@@ -4,7 +4,7 @@ require 'hook_actions'
 
 class AutoMerge < HookActions
 
-  def initialize(json, user, token, host = 'https://api.github.com/')
+  def initialize(json, user, token, host)
     super json, user, token, host
     configure_endpoints
   end
