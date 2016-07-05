@@ -21,13 +21,24 @@ raise ArgumentError, 'Missing user and token environment variables' unless setti
 post '/webhooks' do
   body = request.body.read
   begin
+    event = request.headers['X-GitHub-Event']
     json = JSON.parse body
 
-    auto = AutoMerge.new json, settings.user, settings.token, settings.host
-    auto.logger = logger
-    auto.perform
+    case event
+      when 'status'
+        auto = AutoMerge.new json, settings.user, settings.token, settings.host
+        auto.logger = logger
+        auto.perform
 
-    'success'
+      when 'pull_request'
+        auto = AutoMerge.new json, settings.user, settings.token, settings.host
+        auto.logger = logger
+        auto.perform
+      else
+        logger.info "Unsupported action: #{event}"
+    end
+    render json: 'success'
+
   rescue Exception => e
     if ENV['SLACK_WEBHOOK_URL']
       notifier = Slack::Notifier.new(ENV['SLACK_WEBHOOK_URL'])
