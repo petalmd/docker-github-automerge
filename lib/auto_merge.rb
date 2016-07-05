@@ -34,24 +34,20 @@ class AutoMerge < HookActions
   def merge(number, sha, from, to, url)
     status, body = @pr_api.merge number, sha
     merge_msg = default_slack_message body['message'], from, to, url
+    @logger.info "Attempted to merge\n#{merge_msg} status #{status}" if @logger
 
     case status
       when 200, 201
-        text = 'Successful merge'
-        color = 'good'
-
+        # Only notify when there's an error. The Pull Request webhook will take care of notifying on success
       when 409
         text = 'Merge conflicts'
         color = 'warning'
+        notify text, merge_msg, color
       else
         text = "Couldnt merge branch - see on GitHub status code: #{status}"
         color = 'warning'
+        notify text, merge_msg, color
     end
-
-    @logger.info "Merged\n#{merge_msg} status #{status}" if @logger
-
-    # Only notify when there's an error. The Pull Request webhook will take care of notifying on sucess
-    notify text, merge_msg, color unless status.in? [200, 201]
   end
 
 end
