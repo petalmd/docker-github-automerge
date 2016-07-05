@@ -21,7 +21,7 @@ raise ArgumentError, 'Missing user and token environment variables' unless setti
 post '/webhooks' do
   body = request.body.read
   begin
-    event = request.headers['X-GitHub-Event']
+    event = request.env['HTTP_X_GITHUB_EVENT']
     json = JSON.parse body
 
     case event
@@ -31,13 +31,13 @@ post '/webhooks' do
         auto.perform
 
       when 'pull_request'
-        auto = AutoMerge.new json, settings.user, settings.token, settings.host
+        auto = MergeReport.new json, settings.user, settings.token, settings.host
         auto.logger = logger
         auto.perform
       else
         logger.info "Unsupported action: #{event}"
     end
-    render json: 'success'
+    'success'
 
   rescue Exception => e
     if ENV['SLACK_WEBHOOK_URL']
