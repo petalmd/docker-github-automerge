@@ -33,7 +33,7 @@ class AutoMerge < HookActions
 
   def merge(number, sha, from, to, url)
     status, body = @pr_api.merge number, sha
-    merge_msg = default_slack_message, from, to, url
+    merge_msg = default_slack_message body['message'], from, to, url
 
     case status
       when 200, 201
@@ -49,7 +49,7 @@ class AutoMerge < HookActions
     end
 
     @logger.info "Merged\n#{merge_msg} status #{status}" if @logger
-    @notifier.notify text, merge_msg, color
+    notify text, merge_msg, color
   end
 
 end

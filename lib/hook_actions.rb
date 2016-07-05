@@ -15,10 +15,10 @@ class HookActions
     @notifier = ENV['SLACK_WEBHOOK_URL'].nil? ? false : Slack::Notifier.new(ENV['SLACK_WEBHOOK_URL'])
   end
 
-  def default_slack_message(from, to, url)
+  def default_slack_message(message, from, to, url)
     {
       fallback: "#{from} to #{to}. #{@repo_name}",
-      text: body['message'],
+      text: message,
       fields: [
         {
           title: 'Branch',

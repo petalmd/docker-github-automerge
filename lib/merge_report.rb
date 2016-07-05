@@ -23,11 +23,11 @@ class MergeReport < HookActions
   end
 
   def report(title, from, to, url)
-    text = "#{title} was merged"
+    text = "*#{title}* was merged"
     color = 'good'
-    merge_msg = default_slack_message from, to, url
+    merge_msg = default_slack_message title, from, to, url
 
     @logger.info "Reporting status for merged PR \n#{merge_msg}" if @logger
-    @notifier.notify text, merge_msg, color
+    notify text, merge_msg, color
   end
 end
