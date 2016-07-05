@@ -49,7 +49,9 @@ class AutoMerge < HookActions
     end
 
     @logger.info "Merged\n#{merge_msg} status #{status}" if @logger
-    notify text, merge_msg, color
+
+    # Only notify when there's an error. The Pull Request webhook will take care of notifying on sucess
+    notify text, merge_msg, color unless status.in? [200, 201]
   end
 
 end
