@@ -1,24 +1,11 @@
-require 'client/provider'
 require 'client/pull_request'
 require 'client/status'
-require 'webhooks/status'
+require 'hook_actions'
 
-require 'json'
-require 'slack-notifier'
+class AutoMerge < HookActions
 
-class AutoMerge
-
-  ENV['SLACK_URL']
-
-  attr_accessor :logger
-
-  def initialize(json, user, token, host = 'https://api.github.com/')
-    @logger = false
-    @status = Webhooks::Status.new json
-    repo_name =  @status.repository['full_name']
-    @provider = Client::Provider.new repo_name, user, token, host
-
-    @notifier = ENV['SLACK_WEBHOOK_URL'].nil? ? false : Slack::Notifier.new(ENV['SLACK_WEBHOOK_URL'])
+  def initialize(json, user, token, host)
+    super json, user, token, host
     configure_endpoints
   end
 
@@ -39,40 +26,14 @@ class AutoMerge
         url = pull_request['html_url']
         merge pull_request['number'], sha, from, to, url
       else
-        @logger.info "Skipping PR ##{pull_request['number']} in #{@status.repository['full_name']} - not ready to merge" if @logger
+        @logger.info "Skipping PR ##{pull_request['number']} in #{@repo_name} - not ready to merge" if @logger
       end
     end
   end
 
   def merge(number, sha, from, to, url)
     status, body = @pr_api.merge number, sha
-
-    merge_msg = {
-        fallback: "#{from} to #{to}. #{@status.repository['full_name']}",
-        text: body['message'],
-        fields: [
-            {
-              title: 'Branch',
-              value: from,
-              short: true
-            },
-            {
-                title: 'Target Branch',
-                value: to,
-                short: true
-            },
-            {
-                title: 'Repository',
-                value: @status.repository['full_name'],
-                short: true
-            },
-            {
-                title: 'URL',
-                value: url,
-                short: true
-            }
-        ]
-    }
+    merge_msg = default_slack_message, from, to, url
 
     case status
       when 200, 201
@@ -83,17 +44,12 @@ class AutoMerge
         text = 'Merge conflicts'
         color = 'warning'
       else
-        text = 'Couldnt merge branch - see on GitHub'
-        color = 'danger'
+        text = "Couldnt merge branch - see on GitHub status code: #{status}"
+        color = 'warning'
     end
 
-    @logger.info "Merged\n#{merge_msg}" if @logger
-    @notifier.ping text, attachments: [merge_msg.merge(color: color)] if @notifier
-  end
-
-  def self.file_to_json(filename)
-    file = File.new filename
-    JSON.parse file.read
+    @logger.info "Merged\n#{merge_msg} status #{status}" if @logger
+    @notifier.notify text, merge_msg, color
   end
 
 end
