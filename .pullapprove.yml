@@ -6,5 +6,6 @@ reset_on_push: true
 reviewers:
   members:
   - frobichaud
+  - jmaitrehenry
   name: default
   required: 1
