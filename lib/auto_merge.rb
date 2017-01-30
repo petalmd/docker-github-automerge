@@ -15,7 +15,7 @@ class AutoMerge < HookActions
   end
 
   def perform
-    impacted_branches = @data['branches'].collect(&:name)
+    impacted_branches = @data['branches'].collect {|branch| branch['name']}
 
     pull_requests = impacted_branches.collect do |branch_name|
       @pr_api.list(branch_name).collect {|pr| @pr_api.get pr['number']}
