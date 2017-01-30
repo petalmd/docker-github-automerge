@@ -5,8 +5,8 @@ module Client
       @provider = provider
     end
 
-    def list(status = 'open')
-      req = @provider.get "/pulls?status=#{status}"
+    def list(branch)
+      req = @provider.get "/pulls?head=petalmd:#{branch}"
       JSON.parse(req.body)
     end
 
