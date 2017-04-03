@@ -24,7 +24,7 @@ class AutoMerge < HookActions
     pull_requests.select do |pull_request|
       sha = pull_request['head']['sha']
 
-      can_merge = pull_request['mergeable'] && pull_request['mergeable_state'] == 'clean'
+      can_merge = pull_request['mergeable'] && pull_request['mergeable_state'] == 'clean' && pull_request['base']['label'] == 'master'
       if can_merge
         from = pull_request['head']['label']
         to = pull_request['base']['label']
