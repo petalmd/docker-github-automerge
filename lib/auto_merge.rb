@@ -37,6 +37,10 @@ class AutoMerge < HookActions
   end
 
   def merge(number, sha, from, to, url)
+    unless ENV['DO_NOT_MERGE'].nil?
+      return
+    end
+
     status, body = @pr_api.merge number, sha
     merge_msg = default_slack_message body['message'], from, to, url
     @logger.info "Attempted to merge\n#{merge_msg} status #{status}" if @logger
